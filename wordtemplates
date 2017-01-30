@@ -1,0 +1,22 @@
+#!/bin/sh
+
+user=`ls -la /dev/console | cut -d " " -f 4`
+
+if [ -d /Users/$user/Library/Group\ Containers/UBF8T346G9.Office/User\ Content.localized/Templates.localized/ ]
+then
+	echo "Templates folder exits"
+	sudo mv /tmp/Templates /Users/$user/Documents/
+	sudo mv /Users/$user/Documents/Templates/*.* /Users/$user/Library/Group\ Containers/UBF8T346G9.Office/User\ Content.localized/Templates.localized/
+	rm -Rd /Users/$user/Documents/Templates
+else
+	echo "Creating Templates folder"
+	sudo -u $user open /Applications/Microsoft\ Word.app
+	sleep 10
+	ps aux | grep /Applications/Microsoft\ Word.app/Contents/MacOS/Microsoft\ Word | grep $user | kill -9 `awk '{print $2}'`
+##	------------------------------------------
+	mv /tmp/Templates /Users/$user/Documents/
+	sudo mv /Users/$user/Documents/Templates/*.* /Users/$user/Library/Group\ Containers/UBF8T346G9.Office/User\ Content.localized/Templates.localized/
+	rm -Rd /Users/$user/Documents/Templates
+fi
+
+exit 0
